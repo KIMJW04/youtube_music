@@ -1,1 +1,0 @@
-# Getting Started with Create My Music App
