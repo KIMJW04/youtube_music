@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ChartSlider from '../components/ChartSlider';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
@@ -16,12 +16,13 @@ const Home = () => {
     const [error, setError] = useState(null);
 
     const formattedDate = selectedDate.toISOString().split('T')[0];
-    const chartUrls = [
+
+    const chartUrls = useMemo(() => [
         { id: 'melon', name: '멜론 차트', url: `https://raw.githubusercontent.com/KIMJW04/music-chart/main/melon/melon100_${formattedDate}.json` },
         { id: 'bugs', name: '벅스 차트', url: `https://raw.githubusercontent.com/KIMJW04/music-chart/main/bugs/bugs100_${formattedDate}.json` },
         { id: 'apple', name: '애플 차트', url: `https://raw.githubusercontent.com/KIMJW04/music-chart/main/apple/apple100_${formattedDate}.json` },
         { id: 'billboard', name: '빌보드 차트', url: `https://raw.githubusercontent.com/KIMJW04/music-chart/main/billboard/billboard100_${formattedDate}.json` }
-    ];
+    ], [formattedDate]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,7 +47,7 @@ const Home = () => {
         };
 
         fetchData();
-    }, [chartUrls, formattedDate]); // chartUrls 추가
+    }, [chartUrls]);
 
     if (loading) return <Loading loading={true} />;
     if (error) return <Error message={error.message} />;
