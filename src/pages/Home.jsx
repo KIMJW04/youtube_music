@@ -10,7 +10,7 @@ const Home = () => {
         return date;
     };
 
-    const [selectedDate, setSelectedDate] = useState(getYesterdaysDate());
+    const [selectedDate] = useState(getYesterdaysDate()); // setSelectedDate 제거
     const [charts, setCharts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -46,7 +46,7 @@ const Home = () => {
         };
 
         fetchData();
-    }, [formattedDate]);
+    }, [chartUrls, formattedDate]); // chartUrls 추가
 
     if (loading) return <Loading loading={true} />;
     if (error) return <Error message={error.message} />;
