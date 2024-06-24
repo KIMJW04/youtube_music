@@ -60,7 +60,7 @@ const Home = () => {
     return (
         <div>
             {charts.map((chart, index) => (
-                <ChartSlider key={index} charts={chart.data.slice(0, 10)} title={chart.name} />
+                <ChartSlider key={index} charts={chart.data.slice(0, 10)} title={chart.name} id={chart.id} />
             ))}
         </div>
     );

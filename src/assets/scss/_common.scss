@@ -15,6 +15,13 @@
     background-color: var(--mainBg);
 }
 
+.loading2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+
 .error {
     display: flex;
     align-items: center;
@@ -36,19 +43,19 @@
     font-family: var(--fontJ) !important;
 }
 
-.modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    outline: none;
-}
+// .modal {
+//     position: absolute;
+//     top: 50%;
+//     left: 50%;
+//     right: auto;
+//     bottom: auto;
+//     margin-right: -50%;
+//     transform: translate(-50%, -50%);
+//     background: white;
+//     padding: 20px;
+//     border-radius: 10px;
+//     outline: none;
+// }
 
 .overlay {
     position: fixed;
@@ -60,13 +67,16 @@
 }
 
 /* src/App.css 또는 적절한 CSS 파일 */
-.chart {
-    position: relative;
-    height: 300px;
-    div {
+.chart__wrap {
+    max-height: 300px;
+    .chart {
+        position: relative;
         height: 300px;
-        canvas {
+        div {
             height: 300px;
+            canvas {
+                height: 300px;
+            }
         }
     }
 }

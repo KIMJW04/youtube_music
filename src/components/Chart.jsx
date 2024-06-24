@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useState } from "react";
+import React, { forwardRef, useContext, useState, useCallback, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
 import Modal from "./Modal";
+import Loading from "./Loading2"; // 로딩 컴포넌트 임포트
 import { useParams } from "react-router-dom";
 import { subDays, format } from "date-fns";
 
@@ -45,45 +46,65 @@ const Chart = ({ title, showCalendar, selectedDate, onDateChange, minDate, maxDa
     const [youtubeResults, setYoutubeResults] = useState([]);
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [chartData, setChartData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
 
-    const fetchRankingData = async (title) => {
-        const dates = getLastMonthDates();
-        const rankingData = [];
+    const fetchRankingData = useCallback(
+        async (title) => {
+            const dates = getLastMonthDates();
+            const rankingData = [];
 
-        for (let date of dates) {
-            const url = `https://raw.githubusercontent.com/KIMJW04/music-chart/main/${id}/${id}100_${date}.json`;
+            for (let date of dates) {
+                const url = `https://raw.githubusercontent.com/KIMJW04/music-chart/main/${id}/${id}100_${date}.json`;
 
-            try {
-                const response = await axios.get(url);
-                const items = response.data;
+                try {
+                    const response = await axios.get(url);
+                    const items = response.data;
 
-                const item = items.find((item) => item.title === title);
-                if (item) {
-                    rankingData.push({ date, rank: parseInt(item.rank, 10) });
+                    const item = items.find((item) => item.title === title);
+                    if (item) {
+                        rankingData.push({ date, rank: parseInt(item.rank, 10) });
+                    }
+                } catch (error) {
+                    console.error(`Failed to fetch data for date: ${date}`, error);
                 }
-            } catch (error) {
-                console.error(`Failed to fetch data for date: ${date}`, error);
             }
-        }
 
-        setChartData({
-            labels: rankingData.map((data) => data.date),
-            datasets: [
-                {
-                    label: title,
-                    backgroundColor: "rgba(75,192,192,0.2)",
-                    borderColor: "rgba(75,192,192,1)",
-                    borderWidth: 2,
-                    data: rankingData.map((data) => data.rank),
-                },
-            ],
-        });
-    };
+            setChartData({
+                labels: rankingData.map((data) => data.date),
+                datasets: [
+                    {
+                        label: title,
+                        backgroundColor: "rgba(75,192,192,0.2)",
+                        borderColor: "rgba(75,192,192,1)",
+                        borderWidth: 2,
+                        data: rankingData.map((data) => data.rank),
+                    },
+                ],
+            });
+        },
+        [id]
+    );
+
+    useEffect(() => {
+        if (selectedTitle) {
+            setIsLoading(true);
+            const loadStartTime = Date.now(); // 로딩 시작 시간 기록
+
+            fetchRankingData(selectedTitle).finally(() => {
+                const loadEndTime = Date.now();
+                const loadDuration = loadEndTime - loadStartTime;
+                const remainingTime = Math.max(1000 - loadDuration, 0); // 최소 1초 동안 로딩 유지
+
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, remainingTime);
+            });
+        }
+    }, [selectedTitle, fetchRankingData]);
 
     const handleItemClick = (item) => {
         setSelectedTitle(item.title);
         searchYoutube(item.title);
-        fetchRankingData(item.title);
     };
 
     const searchYoutube = async (query) => {
@@ -143,7 +164,9 @@ const Chart = ({ title, showCalendar, selectedDate, onDateChange, minDate, maxDa
         if (playlist && selectedTrack) {
             playlist.items.push(selectedTrack);
             localStorage.setItem(playlistId, JSON.stringify(playlist));
+            toast.success("플레이리스트에 추가되었습니다.");
         }
+        setIsModalOpen(false); // 모달 닫기
     };
 
     return (
@@ -192,28 +215,34 @@ const Chart = ({ title, showCalendar, selectedDate, onDateChange, minDate, maxDa
                             </li>
                         ))}
                     </ul>
-                    {chartData && (
-                        <div className="chart">
-                            <h3>{selectedTitle}의 차트</h3>
-                            <div>
-                                <Line
-                                    data={chartData}
-                                    options={{
-                                        maintainAspectRatio: false,
-                                        scales: {
-                                            y: {
-                                                reverse: true,
-                                                beginAtZero: false,
-                                                ticks: {
-                                                    stepSize: 1,
+                    <div className="chart__wrap">
+                        {isLoading ? ( // 로딩 상태 표시
+                            <Loading /> // 로딩 컴포넌트 사용
+                        ) : (
+                            chartData && (
+                                <div className="chart">
+                                    <h3>{selectedTitle}의 차트</h3>
+                                    <div>
+                                        <Line
+                                            data={chartData}
+                                            options={{
+                                                maintainAspectRatio: false,
+                                                scales: {
+                                                    y: {
+                                                        reverse: true,
+                                                        beginAtZero: false,
+                                                        ticks: {
+                                                            stepSize: 1,
+                                                        },
+                                                    },
                                                 },
-                                            },
-                                        },
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            )
+                        )}
+                    </div>
                     <span className="close" onClick={() => setYoutubeResults([])}>
                         <MdClose />
                     </span>
