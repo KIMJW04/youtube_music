@@ -58,3 +58,15 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.75);
 }
+
+/* src/App.css 또는 적절한 CSS 파일 */
+.chart {
+    position: relative;
+    height: 300px;
+    div {
+        height: 300px;
+        canvas {
+            height: 300px;
+        }
+    }
+}

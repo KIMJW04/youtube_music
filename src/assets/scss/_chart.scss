@@ -2,7 +2,7 @@
     padding: 0 2rem 2rem 2rem;
     position: relative;
 
-    >.title {
+    > .title {
         font-weight: 900;
         margin-bottom: 20px;
         display: flex;
@@ -33,7 +33,7 @@
         }
     }
 
-    >.list {
+    > .list {
         ul {
             width: 100%;
             display: flex;
@@ -98,7 +98,7 @@
     left: 260px;
     right: 400px;
     bottom: 0;
-    height: 370px;
+    height: 720px;
     background-color: var(--pointBg);
     padding: 2rem;
 
@@ -174,5 +174,4 @@
             font-size: 20px;
         }
     }
-
 }
