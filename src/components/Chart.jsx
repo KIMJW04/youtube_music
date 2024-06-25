@@ -33,7 +33,7 @@ const getLastMonthDates = () => {
         // 날짜 범위를 하루 전부터 한 달 전까지로 수정
         dates.push(formatDate(subDays(new Date(), i)));
     }
-    return dates;
+    return dates.reverse(); // 날짜 배열을 역순으로 정렬
 };
 
 const Chart = ({ title, showCalendar, selectedDate, onDateChange, minDate, maxDate, data }) => {
@@ -221,7 +221,7 @@ const Chart = ({ title, showCalendar, selectedDate, onDateChange, minDate, maxDa
                         ) : (
                             chartData && (
                                 <div className="chart">
-                                    <h3>{selectedTitle}의 차트</h3>
+                                    <h3>{selectedTitle}의 순위 지표</h3>
                                     <div>
                                         <Line
                                             data={chartData}

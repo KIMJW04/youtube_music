@@ -39,7 +39,7 @@ const ChartSlider = ({ charts, title, id }) => {
     const fetchRankingData = async (title) => {
         setIsLoading(true); // 로딩 시작
         const loadStartTime = Date.now(); // 로딩 시작 시간 기록
-        const dates = getLastMonthDates();
+        const dates = getLastMonthDates().reverse(); // 날짜 배열을 역순으로 정렬
         const rankingData = [];
 
         for (let date of dates) {
@@ -206,7 +206,7 @@ const ChartSlider = ({ charts, title, id }) => {
                         ) : (
                             chartData && (
                                 <div className="chart">
-                                    <h3>{selectedTitle}의 차트</h3>
+                                    <h3>{selectedTitle}의 순위 지표</h3>
                                     <div>
                                         <Line
                                             data={chartData}
