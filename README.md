@@ -46,8 +46,6 @@
     - 플레이리스트에 추가된 곡들의 실시간 스트리밍
 
 <img src="/img/img02.png">
-<img src="/img/img03.png">
-<img src="/img/img04.png">
 <img src="/img/img05.png">
 <img src="/img/img06.png">
 
