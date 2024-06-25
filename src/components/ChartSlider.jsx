@@ -128,14 +128,13 @@ const ChartSlider = ({ charts, title, id }) => {
     };
 
     const handleAddToPlaylistClick = (result) => {
-        const newTrack = {
+        setSelectedTrack({
             title: result.snippet.title,
             videoID: result.id.videoId,
             imageURL: result.snippet.thumbnails.default.url,
             artist: result.snippet.channelTitle,
             rank: 1,
-        };
-        setSelectedTrack(newTrack);
+        });
         setIsModalOpen(true);
     };
 
@@ -144,6 +143,7 @@ const ChartSlider = ({ charts, title, id }) => {
         if (playlist && selectedTrack) {
             playlist.items.push(selectedTrack);
             localStorage.setItem(playlistId, JSON.stringify(playlist));
+            toast.success("플레이리스트에 추가되었습니다.");
         }
         setIsModalOpen(false); // 모달 닫기
     };

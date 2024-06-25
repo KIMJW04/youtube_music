@@ -88,7 +88,9 @@ const Chart2 = ({ title, showCalendar, selectedDate, onDateChange, minDate, maxD
         if (playlist && selectedTrack) {
             playlist.items.push(selectedTrack);
             localStorage.setItem(playlistId, JSON.stringify(playlist));
+            toast.success("플레이리스트에 추가되었습니다.");
         }
+        setIsModalOpen(false); // 모달 닫기
     };
 
     return (
