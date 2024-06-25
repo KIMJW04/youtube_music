@@ -66,6 +66,7 @@
         box-sizing: border-box;
 
         .swiper-slide-content {
+            cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
